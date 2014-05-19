@@ -93,18 +93,27 @@ abstract class LogParserAbstract
         // get fields from input file
 		if ($fields = $this->_analyseFields()) {
 			$this->_fields = $fields;
+			// if has fields then set valid to the true
 			$this->_isValid = true;
 		}
     }
 	
+	/**
+	* Search all params fields in an input file
+	*
+	* @return array of all fields
+	* @throws LogParserException
+	*/
 	private function _analyseFields() 
 	{
 		$handle = @fopen($this->_inFile, 'r');
         $fields = [];
         if ($handle) {
             while (($lineString = fgets($handle, 4096)) !== false) {
+				// get line data
                 $lineData = $this->formatLine($lineString);
 				if ($lineData) {
+					// get fields of current line and merge difference with founded
 					$currentFields = array_keys($lineData);
 					$fields = array_merge($fields, array_diff($currentFields, $fields));
 				}
@@ -117,6 +126,11 @@ abstract class LogParserAbstract
         }
 	}
 	
+	/**
+	* Check validation format param
+	*
+	* @return boolean
+	*/
 	public function isValidFormat() 
 	{
 		return $this->_isValid;
@@ -130,6 +144,9 @@ abstract class LogParserAbstract
      */
     public function parse() 
     {
+		if (!$this->isValidFormat()) {
+			throw new LogParserException("File is empty or has a wrong format");
+		}
         $handle = @fopen($this->_inFile, 'r');
         if ($handle) {
             while (($lineString = fgets($handle, 4096)) !== false) {
