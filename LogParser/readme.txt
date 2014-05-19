@@ -1,7 +1,9 @@
 
     If you want to create your custom parser, you just need to implement 
     formatData($lineString) method in your custom parser class. Your custom 
-    class must extend LogParserAbstract.
+    class must extend LogParserAbstract. Also you have to add your custom 
+	class name to the type array in LogParserFactory, if you want to create
+	parsers through the factory.
     FormatData expects current line string of log file and must return 
     array of keys and values like:
 
