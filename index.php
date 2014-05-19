@@ -20,22 +20,22 @@ try {
      */
 	
     //This is example for parsing json log to csv with factory.
-    $jsonParser = LogParser\LogParserFactory::createParser('input_file.log', 'output_file.csv'); 
+    $jsonParser = LogParser\LogParserFactory::createParser('inputfile-type-date.log', 'output_file.csv'); 
     
     // default parse method. it's return lines count, error lines you can see 
     // in the error.log which place in parser dir.
     $jsonLogLinesCount = $jsonParser->parse(); 
     echo 'Json Log lines count: ' . $jsonLogLinesCount . '<br>';
-
+    
     //This is example for parsing key value log. As you can see both methods the same.
 	// It's because type of parser has been selected in Factory automatically.
-    $keyValParser = LogParser\LogParserFactory::createParser('input_file_2.log', 'output_file_2.log');
+    $keyValParser = LogParser\LogParserFactory::createParser('inputfile-type-date.log', 'output_file_2.log');
     $kvLogLinesCount = $keyValParser->parse();
     echo 'Key=Value Log lines count: '  . $kvLogLinesCount;
 	
-	//You can also call each parser directly.
-	$keyValParser = new LogParser\KeyValue('input_file_3.log', 'output_file_3.log');
-	$kvLogLinesCount = $keyValParser->parse();
+    //You can also call each parser directly.
+    $keyValParser = new LogParser\KeyValue('inputfile-type-date.log', 'output_file_3.log');
+    $kvLogLinesCount = $keyValParser->parse();
     
 } catch (LogParser\Exception\LogParserException $e) {
     // if something important goes wrong then parser throw an exception

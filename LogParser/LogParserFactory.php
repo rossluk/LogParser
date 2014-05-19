@@ -1,28 +1,22 @@
 <?php
 namespace LogParser;
 
-use LogParser\LogParserException as LogParserException;
+use LogParser\Exception\LogParserException as LogParserException;
 
 class LogParserFactory 
 {
-	private static $_types = [
-		'Json', 
-		'KeyValue'
-	];
-	
-
-	public static function createParser($inFile = false, $outFile = false)
-	{
-		foreach (self::$_types as $type) {
-			$type = __NAMESPACE__ . '\\' . $type;
-			$class = new $type($inFile, $outFile);
-			$isValid = $class->isValidFormat();
-			if ($isValid) {
-				return $class;
-			} else {
-				$class = null;
-			}
-		}
-		throw new LogParserException("Can't load parser, maybe file type is wrong");
-	}
+    public static function createParser($inFile = false, $outFile = false)
+    {       
+        if (file_exists($inFile)) {
+            preg_match('/\w+-(\w+)-\d/', $inFile, $result);
+            $className = $result[1] ? __NAMESPACE__ . '\\' . $result[1] : false;
+            if (class_exists($className)) {
+                return new $className($inFile, $outFile);
+            } else {
+                throw new LogParserException("Can't load parser, maybe file type is wrong");
+            }
+        } else {
+            throw new LogParserException("File not exists or empty path to the file");
+        }
+    }
 }
